@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizzeria Domino Lugano</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- VARIABLES --- */
+        :root {
+            --primary: #401c24;
+            --accent: #d4af37;
+            --bg-paper: #fdfbf7;
+            --text: #333;
+            --white: #ffffff;
+            --menu-radius: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--bg-paper); color: var(--text); }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+        .section-padding { padding: 60px 0; }
+        .text-center { text-align: center; }
+
+        /* Bottoni */
+        .btn { display: inline-block; padding: 12px 30px; border-radius: 4px; transition: 0.3s; cursor: pointer; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-primary { background: var(--accent); color: var(--primary); border: 2px solid var(--accent); }
+        .btn-primaryw { background: var(--accent); color: var(--primary); border: 2px solid var(--accent); }
+        .btn-primary:hover { background: transparent; color: var(--accent); }
+        .btn-primaryw:hover { background: transparent; color: var(--accent); }
+        .btn-map { background: transparent; border: 2px solid var(--accent); color: var(--accent); margin-top: 15px; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-map:hover { background: var(--accent); color: var(--primary); }
+
+        /* --- HEADER --- */
+        header { background: var(--primary); color: #fff; padding: 15px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border-bottom: 3px solid var(--accent); }
+        .header-grid { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-img { width: 55px; height: 55px; background-color: #fff; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+        .logo-text { font-size: 1.5rem; font-weight: 800; line-height: 1.1; letter-spacing: 1px; }
+        .logo-text span { color: var(--accent); font-size: 0.8rem; display: block; font-weight: 400; letter-spacing: 3px; }
+        .nav-links { display: flex; gap: 25px; }
+        .nav-links a { font-weight: 600; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; transition: 0.3s; color: #e0e0e0; }
+        .nav-links a:hover { color: var(--accent); transform: translateY(-2px); }
+        .lang-area { justify-self: end; }
+        .lang-switcher { display: flex; align-items: center; gap: 6px; }
+        .lang-switcher img { cursor: pointer; border-radius: 2px; opacity: 0.8; transition: opacity 0.2s; }
+        .lang-switcher img:hover { opacity: 1; }
+
+        /* --- HERO --- */
+        .hero { background: linear-gradient(rgba(64,28,36,0.8), rgba(64,28,36,0.6)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1974&auto=format&fit=crop'); background-size: cover; background-position: center; height: 60vh; display: flex; align-items: center; justify-content: center; color: #fff; text-align: center; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 15px; text-shadow: 2px 2px 0px #000; font-family: 'Georgia', serif; }
+
+        /* --- SLIDER --- */
+        .gallery-section { background: #2b1318; padding: 20px 0; border-bottom: 1px solid var(--accent); }
+        .slider-container { max-width: 1000px; margin: 0 auto; position: relative; height: 400px; border-radius: 8px; overflow: hidden; border: 2px solid var(--accent); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .slide { display: none; width: 100%; height: 100%; animation: fade 1.5s; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+        .active-slide { display: block; }
+        .prev, .next { cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); padding: 16px; color: white; font-weight: bold; font-size: 24px; background-color: rgba(0,0,0,0.5); user-select: none; transition: 0.3s; }
+        .next { right: 0; }
+        .prev:hover, .next:hover { background-color: var(--accent); color: var(--primary); }
+        @keyframes fade { from { opacity: .6 } to { opacity: 1 } }
+
+        /* ══ MENU GALLERY ══ */
+        .menu-wrapper { background-color: #1a0d10; padding: 60px 0 80px; }
+
+        .menu-section-title { font-family: 'Georgia', serif; font-size: 2.5rem; color: var(--accent); text-align: center; margin-bottom: 40px; position: relative; padding-bottom: 15px; }
+        .menu-section-title::after { content: ""; display: block; width: 80px; height: 3px; background: var(--accent); margin: 10px auto 0; border-radius: 2px; }
+
+        .menu-grid { max-width: 1000px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 28px; }
+
+        .menu-card { background: #2b1318; border-radius: var(--menu-radius); overflow: hidden; border: 1px solid rgba(212,175,55,0.25); box-shadow: 0 8px 30px rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; position: relative; }
+        .menu-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 16px 40px rgba(0,0,0,0.6); border-color: var(--accent); }
+        .menu-card img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; transition: filter 0.3s ease; }
+        .menu-card:hover img { filter: brightness(1.08); }
+
+        .card-label { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(26,8,12,0.85)); padding: 28px 16px 14px; font-family: 'Georgia', serif; font-size: 1.1rem; font-weight: 600; letter-spacing: 1.5px; color: var(--accent); text-align: center; pointer-events: none; }
+
+        /* ══ LIGHTBOX ══ */
+        .lightbox { display: none; position: fixed; inset: 0; background: rgba(15,5,8,0.88); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 2000; align-items: center; justify-content: center; padding: 24px; cursor: zoom-out; }
+        .lightbox.active { display: flex; animation: lbFadeIn 0.25s ease; }
+        @keyframes lbFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .lightbox-img-wrap { position: relative; cursor: default; max-width: min(85vw, 640px); animation: lbZoomIn 0.28s cubic-bezier(0.22,1,0.36,1); }
+        @keyframes lbZoomIn { from { transform: scale(0.88); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .lightbox-img-wrap img { width: 100%; max-height: 88vh; object-fit: contain; border-radius: var(--menu-radius); border: 2px solid rgba(212,175,55,0.5); box-shadow: 0 20px 60px rgba(0,0,0,0.8); display: block; transition: opacity 0.15s ease; }
+
+        .lb-arrow { position: fixed; top: 50%; transform: translateY(-50%); background: rgba(64,28,36,0.8); border: 1px solid rgba(212,175,55,0.4); color: var(--accent); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; cursor: pointer; transition: background 0.2s; z-index: 2001; user-select: none; }
+        .lb-arrow:hover { background: var(--primary); border-color: var(--accent); }
+        .lb-prev { left: 16px; }
+        .lb-next { right: 16px; }
+
+        .lb-close { position: fixed; top: 18px; right: 18px; background: rgba(64,28,36,0.85); border: 1px solid rgba(212,175,55,0.4); color: var(--accent); width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; z-index: 2001; transition: background 0.2s; }
+        .lb-close:hover { background: var(--primary); }
+
+        .lb-counter { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 0.8rem; letter-spacing: 2px; color: var(--accent); opacity: 0.75; z-index: 2001; }
+
+        /* --- FOOTER --- */
+        .footer { background: #1a0b0e; color: #ccc; padding-top: 60px; padding-bottom: 30px; border-top: 5px solid var(--accent); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
+        .footer h3 { color: var(--accent); margin-bottom: 20px; font-size: 1.3rem; text-transform: uppercase; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-grid { grid-template-columns: 1fr auto; row-gap: 15px; }
+            .nav-links { grid-column: 1 / -1; justify-content: center; font-size: 0.8rem; flex-wrap: wrap; }
+            .menu-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
+            .lb-arrow { display: none; }
+            .hero h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ══ HEADER ══ -->
+    <header>
+        <div class="container header-grid">
+            <div class="logo-area">
+                <img src="/Domino/logo1.png" alt="Domino Logo" class="logo-img">
+                <div class="logo-text">DOMINO <span>LUGANO</span></div>
+            </div>
+            <nav class="nav-links">
+                <a href="#menu">Menù</a>
+                <a href="#contact">Contatti</a>
+            </nav>
+            <div class="lang-area">
+                <div class="lang-switcher">
+                    <img src="/Domino/it.png" alt="Italiano" width="30">
+                    <span style="color:#555;">|</span>
+                    <img src="/Domino/en.png" alt="English"  width="30">
+                    <span style="color:#555;">|</span>
+                    <img src="/Domino/de.png" alt="Deutsch"  width="30">
+                    <span style="color:#555;">|</span>
+                    <img src="/Domino/fr.png" alt="Français" width="30">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ══ HERO ══ -->
+    <section class="hero">
+        <div class="container">
+            <h1>ITALIAN PASSION FOOD</h1>
+            <a href="tel:+41919942061" class="btn btn-primary" style="margin-right:10px;">
+                <i class="fas fa-phone"></i> Prenota Tavolo
+            </a>
+            <a href="https://wa.me/41919942061" target="_blank" class="btn btn-primaryw">
+                <i class="fa-brands fa-whatsapp"></i> WHATSAPP
+            </a>
+        </div>
+    </section>
+
+    <!-- ══ SLIDER ══ -->
+    <section class="gallery-section">
+        <div class="slider-container">
+            <div class="slide active-slide">
+                <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=1000&q=80" alt="Pizza">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=1000&q=80" alt="Pasta">
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1000&q=80" alt="Vino">
+            </div>
+            <a class="prev" onclick="plusSlides(-1)">❮</a>
+            <a class="next" onclick="plusSlides(1)">❯</a>
+        </div>
+    </section>
+
+    <!-- ══ MENU IMAGE GALLERY ══
+         Sostituisci src="..." con i percorsi reali delle foto del menù (es. /Domino/menu-01.jpg).
+         Cambia il testo delle .card-label a piacere.
+         Per aggiungere pagine: copia un blocco .menu-card e aggiorna data-index.
+    ══════════════════════════════ -->
+    <section id="menu" class="menu-wrapper">
+        <h2 class="menu-section-title">Il Nostro Menù</h2>
+
+        <div class="menu-grid" id="menuGrid">
+
+            <div class="menu-card" data-index="0">
+                <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80" alt="Menù pagina 1">
+                <div class="card-label">Pagina 1</div>
+            </div>
+
+            <div class="menu-card" data-index="1">
+                <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&q=80" alt="Menù pagina 2">
+                <div class="card-label">Pagina 2</div>
+            </div>
+
+            <div class="menu-card" data-index="2">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" alt="Menù pagina 3">
+                <div class="card-label">Pagina 3</div>
+            </div>
+
+            <div class="menu-card" data-index="3">
+                <img src="https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=600&q=80" alt="Menù pagina 4">
+                <div class="card-label">Pagina 4</div>
+            </div>
+
+            <div class="menu-card" data-index="4">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80" alt="Menù pagina 5">
+                <div class="card-label">Pagina 5</div>
+            </div>
+
+            <div class="menu-card" data-index="5">
+                <img src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600&q=80" alt="Menù pagina 6">
+                <div class="card-label">Pagina 6</div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ══ LIGHTBOX ══ -->
+    <div class="lightbox" id="lightbox">
+        <div class="lb-close" id="lbClose">✕</div>
+        <button class="lb-arrow lb-prev" id="lbPrev">&#8249;</button>
+        <div class="lightbox-img-wrap" id="lbWrap">
+            <img id="lbImg" src="" alt="Menù">
+        </div>
+        <button class="lb-arrow lb-next" id="lbNext">&#8250;</button>
+        <div class="lb-counter" id="lbCounter"></div>
+    </div>
+
+    <!-- ══ FOOTER ══ -->
+    <footer class="footer" id="contact">
+        <div class="container footer-grid">
+            <div>
+                <h3>Domino Lugano</h3>
+                <p>Riva Antonio Caccia 12<br>6900 Lugano, CH</p>
+                <a href="https://www.google.com/maps/place/DOMINOLUGANO/@45.9934181,8.9461262,790m/data=!3m2!1e3!4b1!4m6!3m5!1s0x47842d962dd7a309:0x6529340bb7feedc2!8m2!3d45.9934181!4d8.9461262!16s%2Fg%2F1tlbslcv?entry=ttu&g_ep=EgoyMDI1MTEyMy4xIKXMDSoASAFQAw%3D%3D"
+                    target="_blank" class="btn btn-map">
+                    <i class="fas fa-map-marked-alt fa-lg"></i> Apri su Mappe
+                </a>
+            </div>
+            <div>
+                <h3>Contatti</h3>
+                <p>Chiama per prenotare:</p>
+                <a href="tel:+41919942061"
+                    style="font-size:1.3rem; font-weight:bold; color:var(--accent); margin-top:5px; display:block;">
+                    091 994 20 61
+                </a>
+            </div>
+            <div>
+                <h3>Orari</h3>
+                <p>Lun – Dom</p>
+                <p style="color:#fff;">11:30 – 14:30</p>
+                <p style="color:#fff;">18:00 – 23:00</p>
+                <div style="margin-top:20px;">
+                    <a class="fab fa-instagram fa-2x" style="margin-right:15px; cursor:pointer;"
+                        href="https://www.instagram.com/dominolugano_/" target="_blank"></a>
+                    <a class="fab fa-facebook fa-2x" style="cursor:pointer;"
+                        href="https://www.facebook.com/DOMINOLUGANO/" target="_blank"></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center"
+            style="margin-top:40px; border-top:1px solid #333; padding-top:20px; font-size:0.8rem;">
+            © 2024 Pizzeria Domino Lugano.<br>
+            Made by <a href="Google.com">Eccel</a>
+        </div>
+    </footer>
+
+    <script>
+        // ── SLIDER ──
+        let slideIndex = 1;
+        showSlides(slideIndex);
+        setInterval(() => plusSlides(1), 5000);
+
+        function plusSlides(n) { showSlides(slideIndex += n); }
+
+        function showSlides(n) {
+            const slides = document.getElementsByClassName("slide");
+            if (n > slides.length) slideIndex = 1;
+            if (n < 1) slideIndex = slides.length;
+            for (let s of slides) s.style.display = "none";
+            slides[slideIndex - 1].style.display = "block";
+        }
+
+        // ── LIGHTBOX ──
+        const menuGrid  = document.getElementById('menuGrid');
+        const lightbox  = document.getElementById('lightbox');
+        const lbImg     = document.getElementById('lbImg');
+        const lbCounter = document.getElementById('lbCounter');
+        const lbWrap    = document.getElementById('lbWrap');
+        let current = 0;
+
+        function getCards() { return [...menuGrid.querySelectorAll('.menu-card')]; }
+
+        function openLightbox(index) {
+            current = index;
+            const img = getCards()[index].querySelector('img');
+            lbImg.src = img.src;
+            lbImg.alt = img.alt;
+            lbImg.style.opacity = '1';
+            updateCounter();
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function navigate(dir) {
+            const all = getCards();
+            current = (current + dir + all.length) % all.length;
+            lbImg.style.opacity = '0';
+            setTimeout(() => {
+                const img = all[current].querySelector('img');
+                lbImg.src = img.src;
+                lbImg.alt = img.alt;
+                lbImg.style.opacity = '1';
+                updateCounter();
+            }, 150);
+        }
+
+        function updateCounter() {
+            lbCounter.textContent = (current + 1) + ' / ' + getCards().length;
+        }
+
+        menuGrid.addEventListener('click', e => {
+            const card = e.target.closest('.menu-card');
+            if (card) openLightbox(parseInt(card.dataset.index));
+        });
+
+        lightbox.addEventListener('click', e => {
+            if (!lbWrap.contains(e.target)) closeLightbox();
+        });
+
+        document.getElementById('lbClose').addEventListener('click', closeLightbox);
+        document.getElementById('lbPrev').addEventListener('click', e => { e.stopPropagation(); navigate(-1); });
+        document.getElementById('lbNext').addEventListener('click', e => { e.stopPropagation(); navigate(1); });
+
+        document.addEventListener('keydown', e => {
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape')     closeLightbox();
+            if (e.key === 'ArrowLeft')  navigate(-1);
+            if (e.key === 'ArrowRight') navigate(1);
+        });
+    </script>
+
+</body>
+</html>
